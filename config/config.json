@@ -6,6 +6,7 @@
   "val_root": "../data/opening_detection/validation",
   "anchor_path": "../resource/opening.anchors",
   "weight_dir": "../weight/opening",
+  "output_dir": "../validation_result",
   "class_names": "../data/opening_detection/class.names",
   "epoch": 800,
   "batch_size": 8,

@@ -303,9 +303,11 @@ def get_route_layer(block, index):
 
 def get_detection_layer(block, index, num_class, anchors):
     """
-    
+
     :param block:
     :param index:
+    :param num_class:
+    :param anchors:
     :return:
     """
     module = NamedLayer('detection')

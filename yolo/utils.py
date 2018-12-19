@@ -4,9 +4,8 @@ import pickle
 
 import numpy as np
 import torch
-from torch.utils import data
 
-from yolo import boundingbox, dataset
+from yolo import boundingbox
 
 
 class Config(object):
@@ -21,6 +20,7 @@ class Config(object):
         "val_root",
         "anchor_path",
         "weight_dir",
+        "output_dir",
         "class_names",
         "epoch",
         "batch_size",
@@ -268,17 +268,3 @@ def parse_class_names(class_names):
                 classname_dct[name] = i
                 name_list.append(name)
     return classname_dct, tuple(name_list)
-
-
-def to_scalar(x):
-    """
-    """
-    return np.asscalar(x.numpy())
-
-
-if __name__ == '__main__':
-    root = '../data/opening_detection'
-    ds = dataset.Dataset(root)
-    name = ds.data[0].stem
-    for train_data, target in data.DataLoader(ds, batch_size=5, shuffle=True):
-        pass

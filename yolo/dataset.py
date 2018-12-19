@@ -312,7 +312,7 @@ class Dataset(data.Dataset):
                  label_loader=label_loader,
                  transform=transform_image,
                  target_transform=transform_label,
-                 max_object=64,
+                 max_object=None,
                  augmentation=True):
         """
 
@@ -400,10 +400,11 @@ class Dataset(data.Dataset):
 
         # patch the target to same shape of self.max_object * 5
         target_shape = target.shape
-        if target_shape[0] < self.max_object:
-            patch_targets = torch.zeros((self.max_object - target_shape[0], target_shape[1]))
-            patch_targets[..., -1] = -2
-            target = torch.cat((target, patch_targets))
-        elif target_shape[0] > self.max_object:
-            target = target[:self.max_object, ...]
+        if self.max_object is not None:
+            if target_shape[0] < self.max_object:
+                patch_targets = torch.zeros((self.max_object - target_shape[0], target_shape[1]))
+                patch_targets[..., -1] = -2
+                target = torch.cat((target, patch_targets))
+            elif target_shape[0] > self.max_object:
+                target = target[:self.max_object, ...]
         return image, target, original_size, img_name

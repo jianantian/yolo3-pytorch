@@ -7,10 +7,11 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+from torch import autograd
 
 from yolo import dataset, model, utils
 
-COLOR_PALETTE = utils.get_palette('../resource/palette')
+COLOR_PALETTE = utils.get_palette(Path(os.path.abspath(__file__)).parents[1] / 'resource' / 'palette')
 
 
 def data_iter(img_dirname):
@@ -133,11 +134,12 @@ def save_to_json(prediction, original_size, name_tuple, out_filename, input_shap
         json.dump(res, fr, ensure_ascii=False)
 
 
-def detect(img_filename, config_path):
+def detect(img_filename, config_path, out_dirname):
     """
 
     :param img_filename:
     :param config_path:
+    :param out_dirname
     :return:
     """
     config = utils.parse_config(config_path)
@@ -166,10 +168,12 @@ def detect(img_filename, config_path):
     img, _ = dataset.transform_image(original_img, input_size=input_size, new_axis=True, augmentation=False)
     if net.use_cuda:
         img = img.cuda()
-    prediction = net(img)
+
+    with autograd.no_grad():
+        prediction = net(img)
 
     name = Path(img_filename).stem
-    base_dir = Path('../img/res')
+    base_dir = Path(out_dirname)
     out_img = base_dir / (name + '_res.jpg')
     out_json = base_dir / (name + '_res.json')
     _, name_tuple = utils.parse_class_names(class_names)
@@ -185,4 +189,4 @@ def detect(img_filename, config_path):
 if __name__ == '__main__':
     config_path = '../config/config.json'
     img_filename = '../data/opening_detection/validation/data/pic_54.jpg'
-    detect(img_filename, config_path)
+    detect(img_filename, config_path, '../img')

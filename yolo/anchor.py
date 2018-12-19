@@ -4,7 +4,6 @@ import logging
 import pickle
 import random
 
-import fire
 import numpy as np
 from torch.utils import data
 
@@ -17,12 +16,12 @@ def prepare_data(root_dir: str) -> np.ndarray:
     :param root_dir: root directory for train data
     :return:
     """
-    ds = dataset.Dataset(root_dir, transform=None)
+    ds = dataset.Dataset(root_dir, augmentation=False)
     image_shape = ds.image_shape
     data_iter = data.DataLoader(ds, batch_size=1, shuffle=False)
 
     bbox_list = []
-    for i, (_, label) in enumerate(data_iter):
+    for i, (_, label, _, _) in enumerate(data_iter):
         bbox = (label[..., :4][label[..., 4] > -1]).detach()
         bbox_list.append(bbox)
     bbox_array = np.concatenate(bbox_list)
@@ -132,8 +131,8 @@ def generate_anchors(root_dir, filename, initial_method='kmean++'):
 
 
 if __name__ == '__main__':
-    # root_dir = '../data/opening_detection'
-    # filename = '../resource/opening.anchors'
-    # train_data = prepare_data(root_dir)
-    # generate_anchors(root_dir, filename)
-    fire.Fire(generate_anchors)
+    root_dir = '../data/opening_detection/train'
+    filename = '../resource/opening.anchors.bak'
+    train_data = prepare_data(root_dir)
+    generate_anchors(root_dir, filename)
+

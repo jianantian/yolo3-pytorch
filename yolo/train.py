@@ -31,6 +31,10 @@ def train(config, name='opening'):
     if not weight_dir.exists():
         weight_dir.mkdir()
 
+    out_dirname = Path(config.output_dir)
+    if not out_dirname.exists():
+        out_dirname.mkdir()
+
     epoch = config.epoch
     batch_size = config.batch_size
     max_object_num = config.max_objects
@@ -39,7 +43,6 @@ def train(config, name='opening'):
     val_ds = dataset.Dataset(val_root, max_object=max_object_num, augmentation=False)
     test_ds = dataset.Dataset(train_root, max_object=max_object_num, augmentation=False)
 
-    num_class = train_ds.class_num
     cfg_filename = config.net_config
     weight_file = None
     class_names = config.class_names
@@ -109,6 +112,7 @@ def train(config, name='opening'):
 
             validation_result = validation.validate(yolo,
                                                     val_ds,
+                                                    out_dirname,
                                                     batch_size,
                                                     'val_' + str(e),
                                                     max_object_num,
@@ -117,6 +121,7 @@ def train(config, name='opening'):
                                                     save_result=need_save)
             train_result = validation.validate(yolo,
                                                test_ds,
+                                               out_dirname,
                                                batch_size,
                                                'train_' + str(e),
                                                max_object_num,
@@ -125,7 +130,7 @@ def train(config, name='opening'):
                                                save_result=need_save)
 
             try:
-                f1_score = ((validation_result['mean_precision'] * validation_result['mean_recall']) /
+                f1_score = ((2 * validation_result['mean_precision'] * validation_result['mean_recall']) /
                             (validation_result['mean_precision'] + validation_result['mean_recall']))
             except ZeroDivisionError:
                 f1_score = 0

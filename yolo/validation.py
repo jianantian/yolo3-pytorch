@@ -11,6 +11,7 @@ from yolo import model, dataset, utils, detect
 
 def draw_result(images,
                 prediction,
+                out_dirname,
                 epoch_num,
                 name,
                 max_object_num: int,
@@ -20,6 +21,7 @@ def draw_result(images,
 
     :param images:
     :param prediction:
+    :param out_dirname:
     :param epoch_num:
     :param name:
     :param max_object_num:
@@ -29,7 +31,7 @@ def draw_result(images,
     """
     prediction_res = utils.transform_prediction(prediction, confidence_thresh, iou_thresh, max_object_num)
     input_size = (416, 416)
-    base_dir = Path('../validation_result')
+    base_dir = Path(out_dirname)
     if not base_dir.exists():
         base_dir.mkdir()
     images = images.detach().cpu().numpy()
@@ -44,6 +46,7 @@ def draw_result(images,
 
 def validate(net,
              val_data,
+             out_dirname,
              batch_size,
              epoch_num,
              max_object_num: int,
@@ -54,6 +57,7 @@ def validate(net,
 
     :param net:
     :param val_data:
+    :param out_dirname:
     :param batch_size:
     :param epoch_num:
     :param max_object_num:
@@ -83,7 +87,7 @@ def validate(net,
             total_val_detect_num += _detect_num
             total_val_true_detect_num += _true_detect_num
             if save_result:
-                draw_result(val_data, prediction, epoch_num, img_name, max_object_num,
+                draw_result(val_data, prediction, out_dirname, epoch_num, img_name, max_object_num,
                             confidence_thresh=confidence_thresh, iou_thresh=iou_thresh)
 
     # val_precision = total_val_true_detect_num.float() / total_val_detect_num.float()
@@ -118,13 +122,13 @@ if __name__ == '__main__':
     with open(anchor_path, 'rb') as fr:
         anchors = pickle.load(fr)
 
-    num_class = val_data.class_num
     cfg_filename = '../cfg/yolov3.cfg'
     weight_file = '../weight/opening_420.weights'
     yolo = model.load_model(cfg_filename, weight_file, anchors=anchors,
                             class_names=class_names, use_cuda=True, **kwargs)
     validation_result = validate(yolo,
                                  val_data,
+                                 '../validation_result',
                                  4,
                                  'val_0',
                                  max_object_num,
