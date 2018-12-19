@@ -6,6 +6,7 @@ with open('requirements.txt') as fr:
 setup(
     name='yolo',
     version='0.1.0',
+    python_requires='>=3.6.3',
     install_requires=required,
     packages=['yolo', 'resource', 'cfg'],
     include_package_data=True,

@@ -156,10 +156,10 @@ def train(config, name='opening'):
                        'val_f1': f1_score}
 
             visualizer.plot(val_dct)
-
-        if e in lr_decay_epoch:
-            learning_rate *= lr_decay
-            optimizer = torch.optim.Adam(yolo.parameters(), lr=learning_rate)
+        #
+        # if e in lr_decay_epoch:
+        #     learning_rate *= lr_decay
+        #     optimizer = torch.optim.Adam(yolo.parameters(), lr=learning_rate)
 
         if e > 1 and e % save_interval == 0:
             saved_count += 1

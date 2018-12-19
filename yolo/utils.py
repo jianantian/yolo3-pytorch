@@ -121,7 +121,6 @@ def transform_prediction(prediction,
         if num > 0:
             img_predict = np.vstack(output_list)
             predict_shape = img_predict.shape
-            logging.info(f'img_predict_shape: {predict_shape}')
             if predict_shape[0] < max_object_num:
                 patch_targets = np.zeros((max_object_num - predict_shape[0], predict_shape[1]))
                 patch_targets[..., -1] = -1
