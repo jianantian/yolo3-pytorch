@@ -29,11 +29,11 @@ def train(config, name='opening'):
 
     weight_dir = Path(config.weight_dir)
     if not weight_dir.exists():
-        weight_dir.mkdir()
+        weight_dir.mkdir(parents=True)
 
     out_dirname = Path(config.output_dir)
     if not out_dirname.exists():
-        out_dirname.mkdir()
+        out_dirname.mkdir(parents=True)
 
     epoch = config.epoch
     batch_size = config.batch_size
