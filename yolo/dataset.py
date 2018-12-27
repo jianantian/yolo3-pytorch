@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ElementTree
 from pathlib import Path
 
 import cv2
+from PIL import Image
 import numpy as np
 import torch
 from torch.utils import data
@@ -36,8 +37,9 @@ def image_loader(img_filename):
     """
     if isinstance(img_filename, Path):
         img_filename = os.fspath(img_filename)
-    img = cv2.imread(img_filename, cv2.IMREAD_COLOR)
-    return img[..., ::-1]
+    # img = cv2.imread(img_filename, cv2.IMREAD_COLOR)
+    img = Image.open(img_filename)
+    return np.array(img)
 
 
 def _resize_img(original_img, input_size, fill_value=0):

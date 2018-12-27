@@ -3,3 +3,4 @@ numpy >= 1.15.4
 opencv-python >= 3.4.3
 visdom >= 0.1.8
 flask
+pillow

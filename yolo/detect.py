@@ -7,6 +7,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+from PIL import Image
 from torch import autograd
 
 from yolo import dataset, model, utils
@@ -82,7 +83,9 @@ def draw_single_prediction(image, prediction, out_filename, input_shape=None):
                 draw_box(img, new_bbox)
             else:
                 draw_box(img, bbox)
-    cv2.imwrite(os.fspath(out_filename), img[:, :, ::-1])
+    pil_img= Image.fromarray(img)
+    pil_img.save(os.fspath(out_filename))
+    # cv2.imwrite(os.fspath(out_filename), img[:, :, ::-1])
 
 
 def get_detect_result(prediction, original_size, input_shape=None):
@@ -188,5 +191,7 @@ def detection(img_filename, config_path, out_dirname):
 
 if __name__ == '__main__':
     config_path = '../config/config.json'
-    img_filename = '../data/opening_detection/validation/data/pic_54.jpg'
+    dirname = Path('C:/data/户型识别测试图片')
+    img_name ='1311795183－3-2-御景观澜3室2厅1卫-big.jpg'
+    img_filename = dirname / img_name
     detection(img_filename, config_path, '../img')
