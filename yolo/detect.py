@@ -131,7 +131,7 @@ def get_detection_json(prediction, original_size, name_tuple, input_shape=None):
     return res
 
 
-def detect(img_filename, config_path, out_dirname):
+def detection(img_filename, config_path, out_dirname):
     """
 
     :param img_filename:
@@ -189,4 +189,4 @@ def detect(img_filename, config_path, out_dirname):
 if __name__ == '__main__':
     config_path = '../config/config.json'
     img_filename = '../data/opening_detection/validation/data/pic_54.jpg'
-    detect(img_filename, config_path, '../img')
+    detection(img_filename, config_path, '../img')
