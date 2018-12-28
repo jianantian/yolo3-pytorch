@@ -37,9 +37,20 @@ def image_loader(img_filename):
     """
     if isinstance(img_filename, Path):
         img_filename = os.fspath(img_filename)
+    # opencv cannot read some img with non ascii filename
     # img = cv2.imread(img_filename, cv2.IMREAD_COLOR)
-    img = Image.open(img_filename)
-    return np.array(img)
+    img_pil = Image.open(img_filename)
+    img_np = np.array(img_pil)
+    try:
+        h, w, c = img_np.shape
+    except ValueError:
+        res = cv2.cvtColor(img_np, cv2.COLOR_GRAY2RGB)
+    else:
+        if c == 3:
+            res = img_np
+        else:
+            res = cv2.cvtColor(img_np, cv2.COLOR_RGBA2RGB)
+    return res
 
 
 def _resize_img(original_img, input_size, fill_value=0):

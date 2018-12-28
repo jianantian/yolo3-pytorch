@@ -96,9 +96,10 @@ def train(config, name='opening'):
 
         train_filenames = filename_list[:img_count]
         val_filenames = filename_list[img_count:]
-        train_ds = dataset.Dataset(train_root, filenames=train_filenames, max_object=max_object_num, augmentation=True)
-        val_ds = dataset.Dataset(val_root, filenames=val_filenames, max_object=max_object_num, augmentation=False)
-        test_ds = dataset.Dataset(train_root, filenames=val_filenames, max_object=max_object_num, augmentation=False)
+        train_ds = dataset.Dataset(trainval_root, filenames=train_filenames, max_object=max_object_num,
+                                   augmentation=True)
+        val_ds = dataset.Dataset(trainval_root, filenames=val_filenames, max_object=max_object_num, augmentation=False)
+        test_ds = dataset.Dataset(trainval_root, filenames=val_filenames, max_object=max_object_num, augmentation=False)
 
         train_data_iter = data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
 
@@ -188,5 +189,5 @@ def train(config, name='opening'):
 if __name__ == '__main__':
     config_path = '../config/config.json'
     config = utils.parse_config(config_path)
-    # name = 'opening'
-    # train(config, name)
+    name = 'opening'
+    train(config, name)
