@@ -308,6 +308,7 @@ class Dataset(data.Dataset):
 
     def __init__(self,
                  root,
+                 filenames=None,
                  image_shape=416,
                  dtype='float',
                  data_loader=image_loader,
@@ -319,6 +320,7 @@ class Dataset(data.Dataset):
         """
 
         :param root:
+        :param filenames:
         :param image_shape:
         :param dtype:
         :param data_loader:
@@ -328,6 +330,7 @@ class Dataset(data.Dataset):
         :param augmentation:
         """
         self.root = Path(root)
+        self.filenames = filenames
         self.data_dirname = self.root / 'data'
         self.label_dirname = self.root / 'label'
         self.class_names = self.root / 'class.names'
@@ -336,7 +339,10 @@ class Dataset(data.Dataset):
         self.label_dct = self.__get_label_dct()
         self.class_dct = self.__get_class_dct()
         self.class_num = len(self.class_dct)
-        self.data = list(self.data_dirname.iterdir())
+        if self.filenames is None:
+            self.data = list(x for x in self.data_dirname.iterdir())
+        else:
+            self.data = [self.data_dirname / x for x in self.filenames]
         self.data_loader = data_loader
         self.label_loader = label_loader
         self.transform = transform

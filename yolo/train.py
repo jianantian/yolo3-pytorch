@@ -1,5 +1,6 @@
 import logging
 import pickle
+import random
 import time
 from pathlib import Path
 
@@ -20,6 +21,9 @@ def train(config, name='opening'):
     """
     train_root = config.train_root
     val_root = config.val_root
+    trainval_root = Path(config.trainval_root)
+
+    filename_list = list(f.name for f in (trainval_root / 'data').iterdir())
 
     anchor_path = Path(config.anchor_path)
     if not anchor_path.exists():
@@ -39,9 +43,9 @@ def train(config, name='opening'):
     batch_size = config.batch_size
     max_object_num = config.max_objects
 
-    train_ds = dataset.Dataset(train_root, max_object=max_object_num, augmentation=True)
-    val_ds = dataset.Dataset(val_root, max_object=max_object_num, augmentation=False)
-    test_ds = dataset.Dataset(train_root, max_object=max_object_num, augmentation=False)
+    # train_ds = dataset.Dataset(train_root, max_object=max_object_num, augmentation=True)
+    # val_ds = dataset.Dataset(val_root, max_object=max_object_num, augmentation=False)
+    # test_ds = dataset.Dataset(train_root, max_object=max_object_num, augmentation=False)
 
     cfg_filename = config.net_config
     weight_file = None
@@ -58,7 +62,7 @@ def train(config, name='opening'):
                             class_names=class_names, use_cuda=True, **kwargs)
 
     version = [x.strip() for x in config.version.split('.')]
-    img_count = len(train_ds)
+    img_count = int(0.8 * len(filename_list))
     head = version + [img_count, 0]
     yolo.head = head
 
@@ -67,7 +71,7 @@ def train(config, name='opening'):
 
     optimizer = torch.optim.Adam(yolo.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
-    train_data_iter = data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+    # train_data_iter = data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
 
     use_cuda = yolo.use_cuda
 
@@ -87,6 +91,17 @@ def train(config, name='opening'):
         need_save = False
         start_time = time.time()
         yolo.train()
+
+        random.shuffle(filename_list)
+
+        train_filenames = filename_list[:img_count]
+        val_filenames = filename_list[img_count:]
+        train_ds = dataset.Dataset(train_root, filenames=train_filenames, max_object=max_object_num, augmentation=True)
+        val_ds = dataset.Dataset(val_root, filenames=val_filenames, max_object=max_object_num, augmentation=False)
+        test_ds = dataset.Dataset(train_root, filenames=val_filenames, max_object=max_object_num, augmentation=False)
+
+        train_data_iter = data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+
         for i, (train_data, label, original_size, _) in enumerate(train_data_iter):
             if use_cuda:
                 train_data = train_data.cuda()
@@ -173,5 +188,5 @@ def train(config, name='opening'):
 if __name__ == '__main__':
     config_path = '../config/config.json'
     config = utils.parse_config(config_path)
-    name = 'opening'
-    train(config, name)
+    # name = 'opening'
+    # train(config, name)

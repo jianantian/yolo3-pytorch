@@ -1,6 +1,7 @@
 import json
 import logging
 import pickle
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -18,6 +19,7 @@ class Config(object):
         "version",
         "train_root",
         "val_root",
+        "trainval_root",
         "anchor_path",
         "weight_dir",
         "output_dir",
@@ -46,6 +48,8 @@ class Config(object):
         """
         for k in self.__slots__:
             v = dct.get(k, None)
+            if k in {"train_root", "val_root", "trainval_root"}:
+                v = Path(v)
             setattr(self, k, v)
 
 

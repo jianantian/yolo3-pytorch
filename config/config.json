@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "train_root": "../data/opening_detection/train",
   "val_root": "../data/opening_detection/validation",
+  "trainval_root": "../data/opening_detection/trainval",
   "anchor_path": "../resource/opening.anchors",
   "weight_dir": "../weight/opening",
   "output_dir": "../validation_result",
