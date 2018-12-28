@@ -41,7 +41,7 @@ def model_load_server():
 
 
 @app.route('/detection', methods=['POST'])
-def detect():
+def detection():
     """
 
     :return:
@@ -77,4 +77,4 @@ def detect():
 
 if __name__ == '__main__':
     model_load_server()
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=3456)
