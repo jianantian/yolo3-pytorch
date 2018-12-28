@@ -1,6 +1,6 @@
 {
   "net_config": "../cfg/yolov3.cfg",
-  "net_weight": "../weight/opening_420.weights",
+  "net_weight": "../weight/opening_best_0.weights",
   "version": "1.0.0",
   "train_root": "../data/opening_detection/train",
   "val_root": "../data/opening_detection/validation",
