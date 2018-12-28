@@ -107,13 +107,12 @@ def get_detect_result(prediction, original_size, input_shape=None):
                 yield bbox, label, object_conf, class_prob
 
 
-def save_to_json(prediction, original_size, name_tuple, out_filename, input_shape=None):
+def get_detection_json(prediction, original_size, name_tuple, input_shape=None):
     """
 
     :param prediction:
     :param original_size:
     :param name_tuple:
-    :param out_filename:
     :param input_shape:
     :return:
     """
@@ -129,9 +128,7 @@ def save_to_json(prediction, original_size, name_tuple, out_filename, input_shap
                 'bottomright': bottomright}
 
         res.append(data)
-
-    with open(out_filename, 'w', encoding='utf8') as fr:
-        json.dump(res, fr, ensure_ascii=False)
+    return res
 
 
 def detect(img_filename, config_path, out_dirname):
@@ -179,7 +176,10 @@ def detect(img_filename, config_path, out_dirname):
     _, name_tuple = utils.parse_class_names(class_names)
     original_size = original_img.shape[:2]
     prediction_result = utils.transform_prediction(prediction, confidence_thresh, iou_thresh, max_object_num)
-    save_to_json(prediction_result[0], original_size, name_tuple, out_json, input_size)
+    res_dct = get_detection_json(prediction_result[0], original_size, name_tuple, input_size)
+
+    with open(out_json, 'w', encoding='utf8') as fr:
+        json.dump(res_dct, fr, ensure_ascii=False)
     draw_single_prediction(original_img, prediction_result[0], out_img, input_shape=input_size)
     print(f'total_time: {time.time() - start_time},'
           f' model_load_time = {model_load_time}, '

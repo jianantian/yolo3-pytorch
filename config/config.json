@@ -22,5 +22,6 @@
   "lr": 0.001,
   "lr_decay": 0.2,
   "lr_decay_period": 0,
-  "lr_decay_epoch": "40, 120, 160, 240, 360, 600"
+  "lr_decay_epoch": "40, 120, 160, 240, 360, 600",
+  "wd": 0.0005
 }

@@ -36,7 +36,8 @@ class Config(object):
         "lr",
         "lr_decay",
         "lr_decay_period",
-        "lr_decay_epoch")
+        "lr_decay_epoch",
+        "wd")
 
     def __init__(self, dct):
         """

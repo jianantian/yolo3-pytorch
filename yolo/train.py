@@ -63,8 +63,9 @@ def train(config, name='opening'):
     yolo.head = head
 
     learning_rate = config.lr
+    weight_decay = config.wd
 
-    optimizer = torch.optim.Adam(yolo.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(yolo.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     train_data_iter = data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
 

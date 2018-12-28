@@ -206,6 +206,7 @@ def get_convolutional_layer(block, prev_out_channels, index, num_class=None):
     :param block:
     :param prev_out_channels:
     :param index:
+    :param num_class:
     :return:
     """
     in_channels = prev_out_channels
